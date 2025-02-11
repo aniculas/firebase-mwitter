@@ -12,6 +12,7 @@ import {
   onSnapshot,
   where,
   getDocs,
+  Timestamp,
 } from "firebase/firestore";
 import { followUser, unfollowUser, isFollowing } from "@/utils/followUtils";
 
@@ -21,7 +22,7 @@ interface Tweet {
   userHandle: string;
   userPhotoURL: string;
   userName: string;
-  createdAt: any;
+  createdAt: Timestamp;
   userId: string;
 }
 
@@ -134,7 +135,7 @@ export default function Home() {
     }
   };
 
-  const formatTimestamp = (timestamp: any) => {
+  const formatTimestamp = (timestamp: Timestamp | null): string => {
     if (!timestamp) return "";
 
     const date = timestamp.toDate();
@@ -158,7 +159,7 @@ export default function Home() {
     return date.toLocaleDateString();
   };
 
-  return (
+    return (
     <div className="max-w-2xl mx-auto">
       <div className="sticky top-0 bg-white/80 backdrop-blur-sm z-10">
         <div className="px-4 py-3 border-b border-gray-200">

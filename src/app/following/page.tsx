@@ -81,7 +81,7 @@ export default function Following() {
       <div className="p-4">
         {followedUsers.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            You aren't following anyone yet
+            You aren&apos;t following anyone yet
           </div>
         ) : (
           <div className="space-y-2">

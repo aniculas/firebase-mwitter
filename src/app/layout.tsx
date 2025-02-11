@@ -7,7 +7,7 @@ import Navbar from "./components/navbar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/firebase";
 import { usePathname } from "next/navigation";
-import { collection, query, limit, getDocs } from "firebase/firestore";
+import { collection, query, limit, getDocs, DocumentData } from "firebase/firestore";
 import { followUser, isFollowing } from "@/utils/followUtils";
 import Image from "next/image";
 
@@ -20,6 +20,14 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+interface FirestoreUser extends DocumentData {
+  id: string;
+  displayName: string;
+  handle: string;
+  photoURL: string;
+  email: string;
+}
 
 interface SuggestedUser {
   id: string;
@@ -53,7 +61,7 @@ export default function RootLayout({
         const users = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        }));
+        })) as FirestoreUser[];
 
         // Filter out current user and users already being followed
         const filteredUsers = [];

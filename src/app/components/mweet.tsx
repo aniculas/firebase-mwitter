@@ -17,7 +17,6 @@ interface MweetProps {
 const Mweet = ({
   username,
   handle,
-  avatarUrl,
   content,
   timestamp,
   isFollowing,
@@ -31,7 +30,6 @@ const Mweet = ({
         <div className="flex-shrink-0">
           <div className="relative h-10 w-10 overflow-hidden rounded-full bg-gray-100">
             <UserAvatar
-              src={avatarUrl}
               alt={`${username}'s profile picture`}
               size={40}
             />

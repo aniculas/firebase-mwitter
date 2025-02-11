@@ -1,73 +1,88 @@
 // utils/followUtils.ts
-import { db } from "@/firebase";
-import {
-  doc,
+import { db } from '@/firebase';
+import { 
+  doc, 
   getDoc,
+
   collection,
   query,
   where,
   getDocs,
   increment,
-  writeBatch,
-} from "firebase/firestore";
+  writeBatch
+} from 'firebase/firestore';
+
+interface FirestoreUser {
+    id: string;
+    displayName: string;
+    handle: string;
+    photoURL: string;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    bio?: string;
+    followers?: number;
+    following?: number;
+    createdAt?: string;
+    updatedAt?: string;
+    isVerified?: boolean;
+    lastSeen?: string;
+  }
 
 // Follow a user
 export const followUser = async (followerId: string, targetUserId: string) => {
   // Prevent self-following
   if (followerId === targetUserId) {
-    throw new Error("Cannot follow yourself");
+    throw new Error('Cannot follow yourself');
   }
 
   try {
     const batch = writeBatch(db);
 
     // Create unique follow document ID
-    const followDoc = doc(collection(db, "follows"));
-
+    const followDoc = doc(collection(db, 'follows'));
+    
     // Add follow document
     batch.set(followDoc, {
       followerId,
       followingId: targetUserId,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date().toISOString()
     });
 
     // Update follower count for target user
-    const targetUserRef = doc(db, "users", targetUserId);
+    const targetUserRef = doc(db, 'users', targetUserId);
     batch.update(targetUserRef, {
-      followers: increment(1),
+      followers: increment(1)
     });
 
     // Update following count for current user
-    const currentUserRef = doc(db, "users", followerId);
+    const currentUserRef = doc(db, 'users', followerId);
     batch.update(currentUserRef, {
-      following: increment(1),
+      following: increment(1)
     });
 
     await batch.commit();
     return true;
   } catch (error) {
-    console.error("Error following user:", error);
+    console.error('Error following user:', error);
     throw error;
   }
 };
 
 // Unfollow a user
-export const unfollowUser = async (
-  followerId: string,
-  targetUserId: string,
-) => {
+export const unfollowUser = async (followerId: string, targetUserId: string) => {
   try {
     // Find the follow document
-    const followsRef = collection(db, "follows");
+    const followsRef = collection(db, 'follows');
     const q = query(
-      followsRef,
-      where("followerId", "==", followerId),
-      where("followingId", "==", targetUserId),
+      followsRef, 
+      where('followerId', '==', followerId),
+      where('followingId', '==', targetUserId)
     );
-
+    
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
-      throw new Error("Not following this user");
+      throw new Error('Not following this user');
     }
 
     const batch = writeBatch(db);
@@ -78,21 +93,21 @@ export const unfollowUser = async (
     });
 
     // Update follower count for target user
-    const targetUserRef = doc(db, "users", targetUserId);
+    const targetUserRef = doc(db, 'users', targetUserId);
     batch.update(targetUserRef, {
-      followers: increment(-1),
+      followers: increment(-1)
     });
 
     // Update following count for current user
-    const currentUserRef = doc(db, "users", followerId);
+    const currentUserRef = doc(db, 'users', followerId);
     batch.update(currentUserRef, {
-      following: increment(-1),
+      following: increment(-1)
     });
 
     await batch.commit();
     return true;
   } catch (error) {
-    console.error("Error unfollowing user:", error);
+    console.error('Error unfollowing user:', error);
     throw error;
   }
 };
@@ -100,77 +115,77 @@ export const unfollowUser = async (
 // Check if user is following another user
 export const isFollowing = async (followerId: string, targetUserId: string) => {
   try {
-    const followsRef = collection(db, "follows");
+    const followsRef = collection(db, 'follows');
     const q = query(
       followsRef,
-      where("followerId", "==", followerId),
-      where("followingId", "==", targetUserId),
+      where('followerId', '==', followerId),
+      where('followingId', '==', targetUserId)
     );
-
+    
     const querySnapshot = await getDocs(q);
     return !querySnapshot.empty;
   } catch (error) {
-    console.error("Error checking follow status:", error);
+    console.error('Error checking follow status:', error);
     throw error;
   }
 };
 
 // Get all users that a user is following
-export const getFollowing = async (userId: string) => {
-  try {
-    const followsQuery = query(
-      collection(db, "follows"),
-      where("followerId", "==", userId),
-    );
-
-    const querySnapshot = await getDocs(followsQuery);
-    const followingIds = querySnapshot.docs.map(
-      (doc) => doc.data().followingId,
-    );
-
-    // Get user details for each following
-    const followingUsers = await Promise.all(
-      followingIds.map(async (id) => {
-        const userDoc = await getDoc(doc(db, "users", id));
-        return {
-          id: userDoc.id,
-          ...userDoc.data(),
-        };
-      }),
-    );
-
-    return followingUsers;
-  } catch (error) {
-    console.error("Error getting following:", error);
-    throw error;
-  }
-};
+export const getFollowing = async (userId: string): Promise<FirestoreUser[]> => {
+    try {
+      const followsQuery = query(
+        collection(db, "follows"),
+        where("followerId", "==", userId),
+      );
+  
+      const querySnapshot = await getDocs(followsQuery);
+      const followingIds = querySnapshot.docs.map(
+        (doc) => doc.data().followingId,
+      );
+  
+      // Get user details for each following
+      const followingUsers = await Promise.all(
+        followingIds.map(async (id) => {
+          const userDoc = await getDoc(doc(db, "users", id));
+          return {
+            id: userDoc.id,
+            ...userDoc.data(),
+          } as FirestoreUser;
+        }),
+      );
+  
+      return followingUsers;
+    } catch (error) {
+      console.error("Error getting following:", error);
+      throw error;
+    }
+  };
 
 // Get all users following a user
 export const getFollowers = async (userId: string) => {
   try {
     const followsQuery = query(
-      collection(db, "follows"),
-      where("followingId", "==", userId),
+      collection(db, 'follows'),
+      where('followingId', '==', userId)
     );
-
+    
     const querySnapshot = await getDocs(followsQuery);
-    const followerIds = querySnapshot.docs.map((doc) => doc.data().followerId);
-
+    const followerIds = querySnapshot.docs.map(doc => doc.data().followerId);
+    
     // Get user details for each follower
     const followers = await Promise.all(
       followerIds.map(async (id) => {
-        const userDoc = await getDoc(doc(db, "users", id));
+        const userDoc = await getDoc(doc(db, 'users', id));
         return {
           id: userDoc.id,
-          ...userDoc.data(),
+          ...userDoc.data()
         };
-      }),
+      })
     );
-
+    
     return followers;
   } catch (error) {
-    console.error("Error getting followers:", error);
+    console.error('Error getting followers:', error);
     throw error;
   }
 };

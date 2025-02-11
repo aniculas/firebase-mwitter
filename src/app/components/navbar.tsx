@@ -6,6 +6,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/firebase";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
+import Image from "next/image";
 
 interface NavigationItem {
   name: string;
@@ -125,11 +126,15 @@ const Navbar = () => {
 
       <div className="p-4 border-t border-gray-200">
         <div className="flex items-center space-x-3">
-          <img
-            src={"64px-Default_pfp.svg.png"}
-            alt="Profile"
-            className="w-10 h-10 rounded-full"
-          />
+          <div className="relative w-10 h-10 rounded-full overflow-hidden">
+            <Image
+              src="/64px-Default_pfp.svg.png"
+              alt="Profile"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
 
           <div className="flex-1">
             <p className="font-medium text-gray-900">{userData.displayName}</p>

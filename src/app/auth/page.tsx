@@ -21,14 +21,10 @@ export default function AuthPage() {
   const router = useRouter();
   const [user] = useAuthState(auth);
 
-  const [
-    createUserWithEmailAndPassword,
-    signupUser,
-    signupLoading,
-    signupError,
-  ] = useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, , signupLoading, signupError] =
+    useCreateUserWithEmailAndPassword(auth);
 
-  const [signInWithEmailAndPassword, loginUser, loginLoading, loginError] =
+  const [signInWithEmailAndPassword, , loginLoading, loginError] =
     useSignInWithEmailAndPassword(auth);
 
   useEffect(() => {
