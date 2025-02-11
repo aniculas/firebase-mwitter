@@ -14,7 +14,7 @@ interface PostProps {
 
 const MAX_CHARS = 280;
 
-const Post = ({ userAvatar }: PostProps) => {
+const Post = ({ }: PostProps) => {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [user] = useAuthState(auth);

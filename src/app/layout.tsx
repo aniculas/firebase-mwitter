@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.scss";
 import Navbar from "./components/navbar";
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, db } from '@/firebase';
-import { usePathname } from 'next/navigation';
-import { collection, query, limit, getDocs} from 'firebase/firestore';
-import { followUser, isFollowing } from '@/utils/followUtils';
-import Image from 'next/image';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "@/firebase";
+import { usePathname } from "next/navigation";
+import { collection, query, limit, getDocs } from "firebase/firestore";
+import { followUser, isFollowing } from "@/utils/followUtils";
+import Image from "next/image";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,27 +45,30 @@ export default function RootLayout({
       try {
         // Get all users
         const usersQuery = query(
-          collection(db, 'users'),
-          limit(10) // Limit to 10 suggestions
+          collection(db, "users"),
+          limit(10), // Limit to 10 suggestions
         );
-        
+
         const snapshot = await getDocs(usersQuery);
-        const users = snapshot.docs.map(doc => ({
+        const users = snapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         }));
 
         // Filter out current user and users already being followed
         const filteredUsers = [];
         for (const potentialUser of users) {
           if (potentialUser.id !== user.uid) {
-            const isAlreadyFollowing = await isFollowing(user.uid, potentialUser.id);
+            const isAlreadyFollowing = await isFollowing(
+              user.uid,
+              potentialUser.id,
+            );
             if (!isAlreadyFollowing) {
               filteredUsers.push({
                 id: potentialUser.id,
-                displayName: potentialUser.displayName || 'Anonymous',
+                displayName: potentialUser.displayName || "Anonymous",
                 handle: potentialUser.handle,
-                photoURL: potentialUser.photoURL || '/api/placeholder/40/40'
+                photoURL: potentialUser.photoURL || "/api/placeholder/40/40",
               });
             }
           }
@@ -73,7 +76,7 @@ export default function RootLayout({
 
         setSuggestedUsers(filteredUsers);
       } catch (error) {
-        console.error('Error fetching suggested users:', error);
+        console.error("Error fetching suggested users:", error);
       } finally {
         setLoadingUsers(false);
       }
@@ -90,17 +93,19 @@ export default function RootLayout({
     try {
       await followUser(user.uid, userId);
       // Remove user from suggestions after following
-      setSuggestedUsers(prev => prev.filter(u => u.id !== userId));
+      setSuggestedUsers((prev) => prev.filter((u) => u.id !== userId));
     } catch (error) {
-      console.error('Error following user:', error);
+      console.error("Error following user:", error);
     }
   };
 
   // Don't show the layout on the auth page
-  if (pathname === '/auth') {
+  if (pathname === "/auth") {
     return (
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
           {children}
         </body>
       </html>
@@ -109,7 +114,9 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <div className="flex min-h-screen h-screen overflow-hidden">
           <Navbar />
           <main className="flex-1 border-l border-r border-gray-200 overflow-y-auto">
@@ -131,11 +138,14 @@ export default function RootLayout({
               ) : (
                 <div className="space-y-4">
                   {suggestedUsers.map((suggestedUser) => (
-                    <div key={suggestedUser.id} className="flex items-center justify-between">
+                    <div
+                      key={suggestedUser.id}
+                      className="flex items-center justify-between"
+                    >
                       <div className="flex items-center gap-2">
                         <div className="relative h-10 w-10 overflow-hidden rounded-full bg-gray-100">
                           <Image
-                            src={suggestedUser.photoURL}
+                            src={"/64px-Default_pfp.svg.png"}
                             alt={`${suggestedUser.displayName}'s profile picture`}
                             width={40}
                             height={40}
@@ -143,8 +153,12 @@ export default function RootLayout({
                           />
                         </div>
                         <div className="flex flex-col">
-                          <span className="font-medium text-sm text-gray-900">{suggestedUser.displayName}</span>
-                          <span className="text-xs text-gray-500">@{suggestedUser.handle}</span>
+                          <span className="font-medium text-sm text-gray-900">
+                            {suggestedUser.displayName}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            @{suggestedUser.handle}
+                          </span>
                         </div>
                       </div>
                       <button

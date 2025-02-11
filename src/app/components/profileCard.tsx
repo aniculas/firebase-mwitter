@@ -14,7 +14,6 @@ interface ProfileCardProps {
 const ProfileCard = ({
   username,
   handle,
-  avatarUrl,
   isFollowing,
   onFollowToggle
 }: ProfileCardProps) => {
