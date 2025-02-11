@@ -7,7 +7,7 @@ import Navbar from "./components/navbar";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '@/firebase';
 import { usePathname } from 'next/navigation';
-import { collection, query, limit, getDocs, where } from 'firebase/firestore';
+import { collection, query, limit, getDocs} from 'firebase/firestore';
 import { followUser, isFollowing } from '@/utils/followUtils';
 import Image from 'next/image';
 

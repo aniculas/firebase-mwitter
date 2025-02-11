@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useCreateUserWithEmailAndPassword, useSignInWithEmailAndPassword, useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../../firebase';
 import { useRouter } from 'next/navigation';
-import { doc, setDoc, getDoc, runTransaction } from 'firebase/firestore';
+import { doc, getDoc, runTransaction } from 'firebase/firestore';
 
 export default function AuthPage() {
   const [email, setEmail] = useState('');
