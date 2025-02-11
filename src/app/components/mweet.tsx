@@ -1,8 +1,7 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import FollowButton from './followButton';
-import UserAvatar from './userAvatar';
+import FollowButton from "./followButton";
+import UserAvatar from "./userAvatar";
 
 interface MweetProps {
   username: string;
@@ -23,7 +22,7 @@ const Mweet = ({
   timestamp,
   isFollowing,
   onFollowToggle,
-  showFollowButton = true
+  showFollowButton = true,
 }: MweetProps) => {
   return (
     <div className="p-4 hover:bg-gray-50 border-t border-gray-100">
@@ -49,19 +48,17 @@ const Mweet = ({
               <span className="text-gray-500">·</span>
               <span className="text-gray-500">{timestamp}</span>
             </div>
-            
+
             {showFollowButton && (
-              <FollowButton 
-                isFollowing={isFollowing} 
+              <FollowButton
+                isFollowing={isFollowing}
                 onFollowToggle={onFollowToggle}
               />
             )}
           </div>
 
           {/* Tweet Body */}
-          <div className="mt-1 text-gray-900">
-            {content}
-          </div>
+          <div className="mt-1 text-gray-900">{content}</div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../../firebase';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase";
 import ProfileEditor from "../components/profileEditor";
 
 export default function Profile() {

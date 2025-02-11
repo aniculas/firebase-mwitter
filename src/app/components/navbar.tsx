@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { usePathname, useRouter } from 'next/navigation';
-import { Home, Users, Smile, LogOut, LucideIcon } from 'lucide-react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, db } from '@/firebase'
-import { useEffect, useState } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { usePathname, useRouter } from "next/navigation";
+import { Home, Users, Smile, LogOut, LucideIcon } from "lucide-react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "@/firebase";
+import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
 
 interface NavigationItem {
   name: string;
@@ -26,16 +26,16 @@ const Navbar = () => {
   const [user, loading] = useAuthState(auth);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [fetchingUserData, setFetchingUserData] = useState(true);
-  
+
   const navigation: NavigationItem[] = [
-    { name: 'Home', icon: Home, path: '/' },
-    { name: 'Following', icon: Users, path: '/following' },
-    { name: 'Your Profile', icon: Smile, path: '/profile' },
+    { name: "Home", icon: Home, path: "/" },
+    { name: "Following", icon: Users, path: "/following" },
+    { name: "Your Profile", icon: Smile, path: "/profile" },
   ];
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/auth');
+      router.push("/auth");
     }
   }, [user, loading, router]);
 
@@ -45,17 +45,17 @@ const Navbar = () => {
       if (!user) return;
 
       try {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           setUserData({
-            displayName: userDoc.data().displayName || 'User',
-            handle: userDoc.data().handle || '',
-            photoURL: userDoc.data().photoURL || '/api/placeholder/40/40',
-            email: userDoc.data().email || user.email || '',
+            displayName: userDoc.data().displayName || "User",
+            handle: userDoc.data().handle || "",
+            photoURL: userDoc.data().photoURL || "/api/placeholder/40/40",
+            email: userDoc.data().email || user.email || "",
           });
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       } finally {
         setFetchingUserData(false);
       }
@@ -73,16 +73,18 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      router.push('/auth');
+      router.push("/auth");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     }
   };
 
   if (loading || fetchingUserData) {
-    return <div className="w-64 h-screen bg-gray-50 border-r border-gray-200 flex flex-col">
-      <div className="p-4">Loading...</div>
-    </div>;
+    return (
+      <div className="w-64 h-screen bg-gray-50 border-r border-gray-200 flex flex-col">
+        <div className="p-4">Loading...</div>
+      </div>
+    );
   }
 
   if (!user || !userData) {
@@ -99,9 +101,9 @@ const Navbar = () => {
         <ul className="space-y-1">
           {navigation.map((item) => (
             <li key={item.name}>
-              <button 
+              <button
                 className={`w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg ${
-                  pathname === item.path ? 'bg-gray-200' : ''
+                  pathname === item.path ? "bg-gray-200" : ""
                 }`}
                 onClick={() => handleNavigation(item.path)}
               >
@@ -113,7 +115,7 @@ const Navbar = () => {
         </ul>
       </nav>
 
-      <button 
+      <button
         className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100"
         onClick={handleLogout}
       >
@@ -123,9 +125,9 @@ const Navbar = () => {
 
       <div className="p-4 border-t border-gray-200">
         <div className="flex items-center space-x-3">
-          <img 
-            src={'64px-Default_pfp.svg.png'} 
-            alt="Profile" 
+          <img
+            src={"64px-Default_pfp.svg.png"}
+            alt="Profile"
             className="w-10 h-10 rounded-full"
           />
 

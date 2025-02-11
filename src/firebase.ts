@@ -15,7 +15,7 @@ const firebaseConfig = {
   storageBucket: "mwitterv2.firebasestorage.app",
   messagingSenderId: "928036191033",
   appId: "1:928036191033:web:a30382d3d1b42866ba86e8",
-  measurementId: "G-0WS67PZBB4"
+  measurementId: "G-0WS67PZBB4",
 };
 
 // Initialize Firebase

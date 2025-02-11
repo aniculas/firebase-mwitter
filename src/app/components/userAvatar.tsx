@@ -1,8 +1,8 @@
 // components/UserAvatar.tsx
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useState } from 'react';
+import Image from "next/image";
+import { useState } from "react";
 
 interface UserAvatarProps {
   src: string;
@@ -14,10 +14,12 @@ const UserAvatar = ({ src, alt, size = 40 }: UserAvatarProps) => {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <div className={`relative overflow-hidden rounded-full bg-gray-100`} 
-         style={{ width: size, height: size }}>
+    <div
+      className={`relative overflow-hidden rounded-full bg-gray-100`}
+      style={{ width: size, height: size }}
+    >
       <Image
-        src={'/64px-Default_pfp.svg.png'}
+        src={"/64px-Default_pfp.svg.png"}
         alt={alt}
         width={size}
         height={size}

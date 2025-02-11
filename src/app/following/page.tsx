@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import ProfileCard from "../components/profileCard";
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/firebase';
-import { getFollowing, unfollowUser } from '@/utils/followUtils';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase";
+import { getFollowing, unfollowUser } from "@/utils/followUtils";
 
 interface FollowedUser {
   id: string;
@@ -24,14 +24,16 @@ export default function Following() {
 
       try {
         const users = await getFollowing(user.uid);
-        setFollowedUsers(users.map(user => ({
-          id: user.id,
-          displayName: user.displayName || 'Anonymous',
-          handle: user.handle,
-          photoURL: user.photoURL || '/api/placeholder/40/40'
-        })));
+        setFollowedUsers(
+          users.map((user) => ({
+            id: user.id,
+            displayName: user.displayName || "Anonymous",
+            handle: user.handle,
+            photoURL: user.photoURL || "/api/placeholder/40/40",
+          })),
+        );
       } catch (error) {
-        console.error('Error loading followed users:', error);
+        console.error("Error loading followed users:", error);
       } finally {
         setLoading(false);
       }
@@ -46,10 +48,10 @@ export default function Following() {
     try {
       await unfollowUser(user.uid, targetUserId);
       // Remove user from the list
-      setFollowedUsers(prev => prev.filter(u => u.id !== targetUserId));
+      setFollowedUsers((prev) => prev.filter((u) => u.id !== targetUserId));
     } catch (error) {
-      console.error('Error unfollowing user:', error);
-      alert('Failed to unfollow user. Please try again.');
+      console.error("Error unfollowing user:", error);
+      alert("Failed to unfollow user. Please try again.");
     }
   };
 

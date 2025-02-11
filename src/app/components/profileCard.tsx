@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import FollowButton from './followButton';
+import Image from "next/image";
+import FollowButton from "./followButton";
 
 interface ProfileCardProps {
   username: string;
@@ -15,7 +15,7 @@ const ProfileCard = ({
   username,
   handle,
   isFollowing,
-  onFollowToggle
+  onFollowToggle,
 }: ProfileCardProps) => {
   return (
     <div className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
@@ -35,11 +35,8 @@ const ProfileCard = ({
           <span className="text-gray-500 text-sm">{handle}</span>
         </div>
       </div>
-      
-      <FollowButton 
-        isFollowing={isFollowing} 
-        onFollowToggle={onFollowToggle}
-      />
+
+      <FollowButton isFollowing={isFollowing} onFollowToggle={onFollowToggle} />
     </div>
   );
 };
