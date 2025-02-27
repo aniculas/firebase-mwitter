@@ -1,13 +1,8 @@
-// Import the functions you need from the SDKs you need
+// firebase.ts - Updated with persistence
 import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
+import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBrdWlx57qNJYKga83HkTKRqgW-7VQ5wCc",
   authDomain: "mwitterv2.firebaseapp.com",
@@ -22,4 +17,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-// const analytics = getAnalytics(app);
+
+// Set auth persistence to LOCAL
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    // Auth persistence set to LOCAL
+    console.log("Firebase auth persistence set to LOCAL");
+  })
+  .catch((error) => {
+    console.error("Error setting auth persistence:", error);
+  });
+
+// Debug logging for auth state
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log("User is signed in:", user.uid);
+  } else {
+    console.log("User is signed out");
+  }
+});

@@ -116,7 +116,7 @@ export default function AuthPage() {
                 lastName,
                 displayName: `${firstName} ${lastName}`,
                 bio: "",
-                photoURL: "/default-profile.jpg", // Use your default profile picture path
+                photoURL: "/default-profile.jpg", 
                 followers: 0,
                 following: 0,
                 createdAt: new Date().toISOString(),
